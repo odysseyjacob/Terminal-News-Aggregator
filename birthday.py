@@ -196,6 +196,9 @@ while True:
 			system("printf '\e[2t'")
 			break
 
+<<<<<<< HEAD
 #seems like everything is working
 
+=======
+>>>>>>> e50d9f3b6ba3e0fdca3a3e56d19cca98aa6a30d8
 
