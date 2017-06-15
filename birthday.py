@@ -1,6 +1,6 @@
 ##Desktop Silicon Valley Company News Web Scraper##
 ##Finished Sunday, August 4th, 2015##
-## Software for Stan Chudnovsky##
+## Software for Stan Chudnovsky's Birthday##
 
 #from urllib import urlopen
 import urllib2
@@ -195,10 +195,4 @@ while True:
 			print("Awaiting next interval")
 			system("printf '\e[2t'")
 			break
-
-<<<<<<< HEAD
-#seems like everything is working
-
-=======
->>>>>>> e50d9f3b6ba3e0fdca3a3e56d19cca98aa6a30d8
 
