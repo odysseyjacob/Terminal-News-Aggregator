@@ -1,51 +1,52 @@
 ##Desktop Silicon Valley Company News Web Scraper##
-##Finished Sunday, August 4th, 2015##
-## Software for Stan Chudnovsky##
+##Terminal News Aggregator##
+## Software for Stan Chudnovsky ##
 
-#from urllib import urlopen
-import urllib2
-from webbrowser import open_new
-from time import sleep
-from subprocess import check_output
-from os import system
-from sys import exit
+import urllib2 #requests
+from webbrowser import open_new #allow to open webbrowser
+from time import sleep #communicate with internal clock
+from subprocess import check_output #interact with terminal window
+from os import system #interact with terminal window
+from sys import exit #interact with terminal window
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup #scrape from requests
 
-urls = ["http://techcrunch.com/", 
+#urls to scrape
+urls = ["http://techcrunch.com/",
 	"http://www.silicontap.com/",
 	"http://www.siliconbeat.com/",
-	"http://venturebeat.com/",
-	"http://www.entrepreneur.com/latest"]
+	"http://venturebeat.com/"]
 
-header = """Mozilla/5.0 (Windows; U; Windows NT 5.1; de; rv:1.9.1.5) 
+header = """Mozilla/5.0 (Windows; U; Windows NT 5.1; de; rv:1.9.1.5)
 		Gecko/20091102 Firefox/3.5.5"""
 
 check_if_just_launched = 0
 
+#scrape the html from the requests
 def get_html(url):
 
-	req = urllib2.Request(str(url), 
-						None, 
+	req = urllib2.Request(str(url),
+						None,
 						{'User-agent' : header})
 
 	response = urllib2.urlopen(req).read()
 	soup = BeautifulSoup(response, "html.parser")
 	return soup
 
-
+#extract the date and titles from the html(important info)
 def get_date_and_titles(
-		url, 
-		root_tag, 
-		root_class, 
-		date_tag, 
-		header_tag, 
+		url,
+		root_tag,
+		root_class,
+		date_tag,
+		header_tag,
 		*args):
 
 	print('\n' + "Oldest at top, Newest at bottom" + '\n')
-	
+
+	#print out the articles beaaautifully
 	for div_outer in reversed(
-		get_html(url).find_all(str(root_tag), 
+		get_html(url).find_all(str(root_tag),
 		{"class": str(root_class)})):
 
 		if ''.join(div_outer['class']) == "river-blockriver-block-video":
@@ -56,13 +57,13 @@ def get_date_and_titles(
 			print(div_outer.find(str(date_tag)).text.strip() + '\n')
 		else:
 			print(div_outer.find(
-				str(header_tag), 
+				str(header_tag),
 				{"class": str(args[0])}).text)
 			print(div_outer.find(
-				str(date_tag), 
+				str(date_tag),
 				{"class": str(args[1])}).text.strip() + '\n')
 
-
+#ask user if they want to see the site
 def ask_for_site(url):
 
 	question = raw_input("Would you like to see the site? Y or N >> ")
@@ -77,9 +78,10 @@ def ask_for_site(url):
 		print("Invalid phrase. Try again")
 		ask_for_site(url)
 
+#ask user if they want to quit
 def quit_options():
 
-	options = raw_input("""Would you like to minimize screen until next 
+	options = raw_input("""Would you like to minimize screen until next
 		interval OR kill process? q or k (Press u to undo) >> """)
 
 	if options in ("q", "Q"):
@@ -92,7 +94,7 @@ def quit_options():
 		print("Invalid phrase. Try again")
 		quit_options()
 
-
+#display all of user interface(asking for site, quitting options, showing titles)
 def display_user_interface():
 
 	x = raw_input("""Would you like to view:
@@ -100,16 +102,15 @@ def display_user_interface():
 	b)Silicontap
 	c)Siliconbeat
 	d)Venturebeat
-	e)Enterpreneur
-		
+
 	Press the letter associated with the site you want or "q" to quit >> """)
 
 	if x in ("a", "A", "Techcrunch", "techcrunch"):
 		get_date_and_titles(
-			urls[0], 
-			'li', 
-			'river-block', 
-			'time',  
+			urls[0],
+			'li',
+			'river-block',
+			'time',
 			'h2',
 			'post-title',
 			'timestamp')
@@ -118,45 +119,35 @@ def display_user_interface():
 
 	elif x in ("b", "B", "Silicontap", "silicontap"):
 		get_date_and_titles(
-			urls[1], 
-			'li', 
-			'post', 
-			'small', 
-			'h2') 
+			urls[1],
+			'div',
+			'post',
+			'small',
+			'a')
 
 		ask_for_site(urls[1])
 
 	elif x in ("c", "C", "Siliconbeat", "siliconbeat"):
 		get_date_and_titles(
-			urls[2], 
-			'div', 
-			'post-excerpt', 
-			'time',  
-			'a') 
+			urls[2],
+			'div',
+			'post-excerpt',
+			'time',
+			'a')
 
 		ask_for_site(urls[2])
 
 	elif x in ("d", "D", "Venturebeat", "venturebeat"):
 		get_date_and_titles(
-			urls[3], 
-			'header', 
-			'article-header', 
-			'time',  
+			urls[3],
+			'header',
+			'article-header',
+			'time',
 			'h2',
 			'article-title',
 			'the-time')
 
 		ask_for_site(urls[3])
-
-	elif x in ("e", "E", "Enterpreneur", "enterpreneur"):
-		get_date_and_titles(
-			urls[4], 
-			'div', 
-			'pl pl-floathero', 
-			'time',  
-			'h3')
-
-		ask_for_site(urls[4])
 
 	elif x == "q":
 		quit_options()
@@ -177,15 +168,15 @@ while True:
 	system("printf '\e[5t'")
 
 	instance_question = display_user_interface()
-	
+
 	if instance_question == 1:
 		continue
 
 	while True:
 		sleep(2)
-		
-		y = raw_input("""Would you like to view another site's articles? 
-			Y or N >> """)  
+
+		y = raw_input("""Would you like to view another site's articles?
+			Y or N >> """)
 
 		if y in ("Y", "y"):
 			sleep(1)
@@ -195,10 +186,3 @@ while True:
 			print("Awaiting next interval")
 			system("printf '\e[2t'")
 			break
-
-<<<<<<< HEAD
-#seems like everything is working
-
-=======
->>>>>>> e50d9f3b6ba3e0fdca3a3e56d19cca98aa6a30d8
-
