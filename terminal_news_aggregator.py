@@ -1,6 +1,5 @@
 ##Desktop Silicon Valley Company News Web Scraper##
 ##Terminal News Aggregator##
-## Software for Stan Chudnovsky ##
 
 import urllib2 #requests
 from webbrowser import open_new #allow to open webbrowser
